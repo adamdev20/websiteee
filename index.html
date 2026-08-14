@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SUJITH CHEATS — Free Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#030303;
+    --white:#ffffff;
+    --gray:#888888;
+    --gray-dim: rgba(255,255,255,.08);
+    --gray-line: rgba(255,255,255,.14);
+    --ease: cubic-bezier(.16,.84,.44,1);
+    --ease-soft: cubic-bezier(.22,1,.36,1);
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html,body{
+    background:var(--black);
+    color:var(--white);
+    font-family:'Manrope', sans-serif;
+    height:100%;
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  body{
+    position:relative;
+    width:100%;
+    height:100vh;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,255,255,.05), transparent 45%),
+      radial-gradient(circle at 80% 75%, rgba(255,255,255,.04), transparent 50%),
+      var(--black);
+  }
+
+  ::selection{ background:var(--white); color:var(--black); }
+
+  a{ color:inherit; text-decoration:none; }
+  button{ font-family:inherit; background:none; border:none; color:inherit; cursor:pointer; }
+
+  /* ================= CUSTOM CURSOR ================= */
+  #cursor-dot{
+    position:fixed;
+    top:0; left:0;
+    width:10px; height:10px;
+    background:var(--white);
+    border-radius:50%;
+    pointer-events:none;
+    z-index:9999;
+    transform:translate(-50%,-50%);
+    transition: width .3s var(--ease-soft), height .3s var(--ease-soft),
+                background .3s ease, border-width .3s ease, opacity .2s ease;
+    mix-blend-mode:difference;
+    will-change:transform;
+  }
+  #cursor-dot.cursor-hover{
+    width:64px; height:64px;
+    background:transparent;
+    border:1.5px solid var(--white);
+  }
+  #cursor-dot.cursor-hover.cursor-fill{
+    background:var(--white);
+  }
+
+  #cursor-glow{
+    position:fixed;
+    top:0; left:0;
+    width:420px; height:420px;
+    border-radius:50%;
+    pointer-events:none;
+    z-index:1;
+    transform:translate(-50%,-50%);
+    background:radial-gradient(circle, rgba(255,255,255,.06) 0%, rgba(255,255,255,0) 70%);
+    will-change:transform;
+    transition: opacity .4s ease;
+  }
+
+  @media (hover:none), (pointer:coarse){
+    #cursor-dot, #cursor-glow{ display:none !important; }
+    html, body{ cursor:auto !important; }
+  }
+
+  /* ================= MARQUEE BACKGROUND ================= */
+  .marquee-layer{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:0;
+  }
+  .marquee-track{
+    display:flex;
+    white-space:nowrap;
+    will-change:transform;
+  }
+  .marquee-track span{
+    font-family:'Syne', sans-serif;
+    font-weight:800;
+    font-size:clamp(60px, 14vw, 200px);
+    color:transparent;
+    -webkit-text-stroke: 1px rgba(255,255,255,.08);
+    padding-right:60px;
+    letter-spacing:2px;
+    user-select:none;
+  }
+
+  /* ================= NAVBAR ================= */
+  .navbar{
+    position:fixed;
+    top:28px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:1000;
+  }
+  .nav-pill{
+    display:flex;
+    gap:6px;
+    padding:6px;
+    border-radius:999px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.12);
+    backdrop-filter:blur(18px) saturate(160%);
+    -webkit-backdrop-filter:blur(18px) saturate(160%);
+    box-shadow:0 8px 32px rgba(0,0,0,.5);
+  }
+  .nav-item{
+    position:relative;
+    padding:10px 22px;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:.5px;
+    text-transform:uppercase;
+    color:var(--gray);
+    border-radius:999px;
+    transition:color .35s ease;
+    white-space:nowrap;
+  }
+  .nav-item:hover{ color:var(--white); }
+  .nav-item.active{ color:var(--black); }
+  .nav-item .nav-bg{
+    position:absolute;
+    inset:0;
+    background:var(--white);
+    border-radius:999px;
+    z-index:-1;
+    opacity:0;
+    transform:scale(.8);
+    transition:opacity .35s var(--ease), transform .35s var(--ease);
+  }
+  .nav-item.active .nav-bg{ opacity:1; transform:scale(1); }
+
+  .brand-mark{
+    position:fixed;
+    top:34px;
+    left:34px;
+    z-index:1000;
+    font-family:'Syne', sans-serif;
+    font-weight:700;
+    font-size:14px;
+    letter-spacing:1px;
+    color:var(--white);
+    opacity:.85;
+  }
+  .brand-mark span{ color:var(--gray); }
+
+  /* ================= MAIN STAGE ================= */
+  .stage{
+    position:relative;
+    z-index:2;
+    height:100%;
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:120px 24px 90px;
+  }
+
+  .tab-content{
+    position:absolute;
+    width:100%;
+    max-width:1100px;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-46%);
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+  .tab-content.active{ display:flex; }
+
+  .stagger{
+    opacity:0;
+    transform:translateY(36px);
+    animation: staggerUp .9s var(--ease-soft) forwards;
+  }
+  @keyframes staggerUp{
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  /* ---------- FREE PANEL TAB ---------- */
+  .outline-title{
+    font-family:'Syne', sans-serif;
+    font-weight:800;
+    font-size:clamp(48px, 9vw, 110px);
+    letter-spacing:2px;
+    color:transparent;
+    -webkit-text-stroke:1.4px rgba(255,255,255,.9);
+    margin-bottom:14px;
+    animation: staggerUp .9s var(--ease-soft) forwards, breathe 6s ease-in-out 1s infinite;
+  }
+  @keyframes breathe{
+    0%,100%{ transform:translateY(0) scale(1); }
+    50%{ transform:translateY(-10px) scale(1.015); }
+  }
+  .subtitle{
+    color:var(--gray);
+    font-size:14px;
+    font-weight:500;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    margin-bottom:56px;
+  }
+
+  .cards-wrap{
+    display:flex;
+    gap:28px;
+    justify-content:center;
+    width:100%;
+    perspective:1400px;
+  }
+
+  .card{
+    position:relative;
+    width:320px;
+    padding:2px;
+    border-radius:22px;
+    background:linear-gradient(160deg, rgba(255,255,255,.18), rgba(255,255,255,.02));
+    transform-style:preserve-3d;
+    transition: transform .1s linear, box-shadow .4s ease;
+  }
+  .card:hover{
+    box-shadow:0 30px 60px rgba(0,0,0,.55);
+  }
+  .card-inner{
+    position:relative;
+    border-radius:20px;
+    background:linear-gradient(160deg, rgba(255,255,255,.05), rgba(0,0,0,.4));
+    border:1px solid rgba(255,255,255,.08);
+    padding:32px 28px 28px;
+    transform-style:preserve-3d;
+    text-align:left;
+    overflow:hidden;
+  }
+  .card-inner::before{
+    content:'';
+    position:absolute;
+    top:-50%; left:-50%;
+    width:200%; height:200%;
+    background:radial-gradient(circle at 50% 0%, rgba(255,255,255,.06), transparent 55%);
+    pointer-events:none;
+  }
+
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    padding:6px 12px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.2);
+    color:var(--white);
+    margin-bottom:20px;
+  }
+  .badge::before{
+    content:'';
+    width:6px; height:6px;
+    border-radius:50%;
+    background:var(--white);
+    box-shadow:0 0 8px 1px rgba(255,255,255,.8);
+    animation: pulseDot 1.8s ease-in-out infinite;
+  }
+
+  .card-title{
+    font-family:'Syne', sans-serif;
+    font-weight:700;
+    font-size:26px;
+    margin-bottom:20px;
+    letter-spacing:.3px;
+  }
+
+  .card-details{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-bottom:28px;
+    padding-top:16px;
+    border-top:1px solid rgba(255,255,255,.1);
+  }
+  .card-details p{
+    font-size:13px;
+    color:var(--gray);
+    font-weight:500;
+    display:flex;
+    justify-content:space-between;
+  }
+  .card-details p b{ color:var(--white); font-weight:600; }
+
+  .btn-download{
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    padding:14px 0;
+    border-radius:12px;
+    border:1px solid var(--white);
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    overflow:hidden;
+    color:var(--white);
+    isolation:isolate;
+  }
+  .btn-download span{ position:relative; z-index:2; transition:color .45s var(--ease); }
+  .btn-download::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:var(--white);
+    transform:translateX(-101%);
+    transition:transform .45s var(--ease);
+    z-index:1;
+  }
+  .btn-download:hover::before{ transform:translateX(0%); }
+  .btn-download:hover span{ color:var(--black); }
+
+  /* ---------- CONTACT TAB ---------- */
+  .simple-tab .outline-title{ margin-bottom:20px; }
+  .info-list{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    margin-top:8px;
+    width:100%;
+    max-width:460px;
+  }
+  .info-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:16px 22px;
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:14px;
+    background:rgba(255,255,255,.02);
+    transition: border-color .35s ease, background .35s ease, transform .3s ease;
+  }
+  .info-row:hover{
+    border-color:rgba(255,255,255,.35);
+    background:rgba(255,255,255,.05);
+    transform:translateY(-2px);
+  }
+  .info-row .label{ color:var(--gray); font-size:13px; letter-spacing:.5px; text-transform:uppercase; font-weight:600; }
+  .info-row .value{ font-weight:700; font-size:15px; }
+
+  /* ---------- REQUIREMENT TAB ---------- */
+  .req-grid{
+    display:flex;
+    gap:20px;
+    margin-top:8px;
+    flex-wrap:wrap;
+    justify-content:center;
+    max-width:640px;
+  }
+  .req-item{
+    flex:1 1 260px;
+    text-align:left;
+    padding:22px 22px;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.1);
+    background:rgba(255,255,255,.02);
+    transition:transform .3s ease, border-color .3s ease;
+  }
+  .req-item:hover{ transform:translateY(-4px); border-color:rgba(255,255,255,.35); }
+  .req-item .num{
+    font-family:'Syne', sans-serif;
+    font-size:12px;
+    color:var(--gray);
+    letter-spacing:2px;
+    margin-bottom:10px;
+    display:block;
+  }
+  .req-item h4{ font-family:'Syne', sans-serif; font-size:17px; margin-bottom:8px; }
+  .req-item p{ font-size:13px; color:var(--gray); line-height:1.6; }
+
+  .req-download-row{
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+    justify-content:center;
+    width:100%;
+    max-width:520px;
+  }
+  .req-download-row .btn-download{
+    flex:1 1 220px;
+    width:auto;
+  }
+
+  /* ================= DOWNLOAD TOAST ================= */
+  .toast{
+    position:fixed;
+    bottom:78px;
+    left:50%;
+    transform:translateX(-50%) translateY(20px);
+    z-index:1200;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:14px 22px;
+    border-radius:12px;
+    background:rgba(255,255,255,.96);
+    color:var(--black);
+    font-size:12.5px;
+    font-weight:700;
+    letter-spacing:.4px;
+    box-shadow:0 20px 50px rgba(0,0,0,.5);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .4s var(--ease-soft), transform .4s var(--ease-soft);
+  }
+  .toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+  }
+  .toast .toast-dot{
+    width:7px; height:7px;
+    border-radius:50%;
+    background:var(--black);
+  }
+
+  /* ================= FOOTER STATUS BAR ================= */
+  .status-bar{
+    position:fixed;
+    bottom:0; left:0; right:0;
+    z-index:900;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 30px;
+    background:rgba(3,3,3,.5);
+    border-top:1px solid rgba(255,255,255,.1);
+    backdrop-filter:blur(16px) saturate(160%);
+    -webkit-backdrop-filter:blur(16px) saturate(160%);
+  }
+  .copyright{
+    font-size:11.5px;
+    letter-spacing:.6px;
+    color:var(--gray);
+    font-weight:600;
+    transition:color .35s ease, text-shadow .35s ease;
+    cursor:default;
+  }
+  .copyright:hover{
+    color:var(--white);
+    text-shadow:0 0 14px rgba(255,255,255,.7);
+  }
+  .status-indicator{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:1.2px;
+    color:var(--white);
+  }
+  .status-dot{
+    width:8px; height:8px;
+    border-radius:50%;
+    background:var(--white);
+    box-shadow:0 0 0 0 rgba(255,255,255,.7);
+    animation: pulseGlow 1.8s ease-in-out infinite;
+  }
+  @keyframes pulseGlow{
+    0%{ box-shadow:0 0 0 0 rgba(255,255,255,.55); }
+    70%{ box-shadow:0 0 0 9px rgba(255,255,255,0); }
+    100%{ box-shadow:0 0 0 0 rgba(255,255,255,0); }
+  }
+  @keyframes pulseDot{
+    0%,100%{ opacity:1; }
+    50%{ opacity:.35; }
+  }
+
+  /* ================= RESPONSIVE ================= */
+  @media (max-width: 860px){
+    html,body{ height:auto; overflow-y:auto; }
+    body{ min-height:100vh; }
+    .stage{ min-height:100vh; height:auto; padding:130px 20px 120px; align-items:flex-start; }
+    .tab-content{ position:relative; top:0; transform:none; left:0; }
+    .tab-content.active{ transform:none; }
+    .cards-wrap{ flex-direction:column; align-items:center; perspective:none; }
+    .card{ width:100%; max-width:360px; transform:none !important; }
+    .card-inner{ transform:none !important; }
+    .card-inner *{ transform:none !important; }
+    .navbar{ top:18px; }
+    .nav-item{ padding:9px 14px; font-size:11.5px; }
+    .brand-mark{ display:none; }
+    .status-bar{ padding:14px 18px; }
+    .copyright{ font-size:10px; }
+    .status-indicator{ font-size:10px; }
+    .req-grid{ flex-direction:column; }
+  }
+
+  .touch-active{ transform:scale(.96) !important; transition:transform .15s ease; }
+</style>
+</head>
+<body>
+
+  <div id="cursor-dot"></div>
+  <div id="cursor-glow"></div>
+
+  <div class="marquee-layer">
+    <div class="marquee-track" id="marqueeTrack">
+      <span>SUJITH CHEATS &nbsp;•&nbsp; FREE PANEL &nbsp;•&nbsp; SUJITH CHEATS &nbsp;•&nbsp; FREE PANEL &nbsp;•&nbsp; </span>
+      <span>SUJITH CHEATS &nbsp;•&nbsp; FREE PANEL &nbsp;•&nbsp; SUJITH CHEATS &nbsp;•&nbsp; FREE PANEL &nbsp;•&nbsp; </span>
+    </div>
+  </div>
+
+  <div class="brand-mark">SUJITH <span>/ CHEATS</span></div>
+
+  <nav class="navbar">
+    <div class="nav-pill">
+      <button class="nav-item" data-tab="contact" data-magnetic>
+        <span class="nav-bg"></span>Contact
+      </button>
+      <button class="nav-item active" data-tab="freepanel" data-magnetic>
+        <span class="nav-bg"></span>Free Panel
+      </button>
+      <button class="nav-item" data-tab="requirement" data-magnetic>
+        <span class="nav-bg"></span>Requirement
+      </button>
+    </div>
+  </nav>
+
+  <main class="stage">
+
+    <!-- FREE PANEL TAB -->
+    <section class="tab-content active" id="tab-freepanel">
+      <h1 class="outline-title">FREE PANEL</h1>
+      <p class="subtitle stagger" style="animation-delay:.05s">Pilih tools yang kamu butuhkan</p>
+
+      <div class="cards-wrap">
+        <div class="card stagger" data-tilt style="animation-delay:.15s">
+          <div class="card-inner">
+            <span class="badge" data-depth="35">Available</span>
+            <h3 class="card-title" data-depth="55">PC Panel</h3>
+            <div class="card-details" data-depth="25">
+              <p><span>Version</span> <b>v2.4 Latest</b></p>
+              <p><span>Build</span> <b>Optimized Engine</b></p>
+            </div>
+            <a href="https://www.mediafire.com/file/dummy-file/file" class="btn-download" data-depth="45" data-magnetic data-filename="PC-Panel-v2.4.zip" target="_blank" rel="noopener">
+              <span>Download</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="card stagger" data-tilt style="animation-delay:.25s">
+          <div class="card-inner">
+            <span class="badge" data-depth="35">Available</span>
+            <h3 class="card-title" data-depth="55">UID Bypass</h3>
+            <div class="card-details" data-depth="25">
+              <p><span>Version</span> <b>v1.9 Latest</b></p>
+              <p><span>Build</span> <b>Secure Core</b></p>
+            </div>
+            <a href="https://www.mediafire.com/file/dummy-file/file" class="btn-download" data-depth="45" data-magnetic data-filename="UID-Bypass-v1.9.zip" target="_blank" rel="noopener">
+              <span>Download</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT TAB -->
+    <section class="tab-content simple-tab" id="tab-contact">
+      <h1 class="outline-title">CONTACT</h1>
+      <p class="subtitle stagger" style="animation-delay:.05s">Hubungi kami melalui kanal berikut</p>
+      <div class="info-list">
+        <div class="info-row stagger" style="animation-delay:.12s">
+          <span class="label">Telegram</span>
+          <span class="value">@sujithcheats</span>
+        </div>
+        <div class="info-row stagger" style="animation-delay:.2s">
+          <span class="label">Discord</span>
+          <span class="value">sujith.cheats</span>
+        </div>
+        <div class="info-row stagger" style="animation-delay:.28s">
+          <span class="label">Email</span>
+          <span class="value">support@sujithcheats.com</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- REQUIREMENT TAB -->
+    <section class="tab-content simple-tab" id="tab-requirement">
+      <h1 class="outline-title">REQUIREMENT</h1>
+      <p class="subtitle stagger" style="animation-delay:.05s">Pastikan sistem kamu memenuhi kriteria berikut</p>
+      <div class="req-grid">
+        <div class="req-item stagger" style="animation-delay:.12s">
+          <span class="num">01</span>
+          <h4>Windows 10 / 11 (64-bit)</h4>
+          <p>Sistem operasi minimum agar panel berjalan stabil.</p>
+        </div>
+        <div class="req-item stagger" style="animation-delay:.2s">
+          <span class="num">02</span>
+          <h4>Nonaktifkan Antivirus</h4>
+          <p>Matikan Windows Defender / antivirus pihak ketiga saat instalasi.</p>
+        </div>
+        <div class="req-item stagger" style="animation-delay:.28s">
+          <span class="num">03</span>
+          <h4>Koneksi Internet Stabil</h4>
+          <p>Diperlukan untuk proses verifikasi dan update otomatis.</p>
+        </div>
+      </div>
+
+      <p class="subtitle stagger" style="animation-delay:.34s; margin-top:44px; margin-bottom:20px;">Sudah memenuhi kriteria? Download di sini</p>
+      <div class="req-download-row stagger" style="animation-delay:.4s">
+        <a href="https://www.mediafire.com/file/dummy-file/file" class="btn-download" data-magnetic data-filename="PC-Panel-v2.4.zip" target="_blank" rel="noopener">
+          <span>PC Panel — Download</span>
+        </a>
+        <a href="https://www.mediafire.com/file/dummy-file/file" class="btn-download" data-magnetic data-filename="UID-Bypass-v1.9.zip" target="_blank" rel="noopener">
+          <span>UID Bypass — Download</span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="toast" id="downloadToast">
+    <span class="toast-dot"></span>
+    <span id="downloadToastText">Download dimulai</span>
+  </div>
+
+  <footer class="status-bar">
+    <div class="copyright">© 2026 SUJITH CHEATS. ALL RIGHTS RESERVED.</div>
+    <div class="status-indicator">
+      <span class="status-dot"></span>
+      SYSTEM OPERATIONAL
+    </div>
+  </footer>
+
+<script>
+(function(){
+  'use strict';
+
+  const isTouch = window.matchMedia('(hover: none), (pointer: coarse)').matches || 'ontouchstart' in window;
+  const isMobile = isTouch || window.innerWidth <= 860;
+
+  /* ============ CUSTOM CURSOR ============ */
+  const cursorDot  = document.getElementById('cursor-dot');
+  const cursorGlow = document.getElementById('cursor-glow');
+
+  let mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
+  let dotX = mouseX, dotY = mouseY;
+  let glowX = mouseX, glowY = mouseY;
+
+  if(!isMobile){
+    document.addEventListener('mousemove', (e)=>{
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    function animateCursor(){
+      dotX += (mouseX - dotX) * 0.35;
+      dotY += (mouseY - dotY) * 0.35;
+      glowX += (mouseX - glowX) * 0.12;
+      glowY += (mouseY - glowY) * 0.12;
+
+      cursorDot.style.transform  = `translate(${dotX}px, ${dotY}px) translate(-50%,-50%)`;
+      cursorGlow.style.transform = `translate(${glowX}px, ${glowY}px) translate(-50%,-50%)`;
+
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    const hoverables = document.querySelectorAll('a, button, [data-tilt], .nav-item, .btn-download');
+    hoverables.forEach(el=>{
+      el.addEventListener('mouseenter', ()=>{
+        cursorDot.classList.add('cursor-hover');
+        if(el.classList.contains('btn-download')) cursorDot.classList.add('cursor-fill');
+      });
+      el.addEventListener('mouseleave', ()=>{
+        cursorDot.classList.remove('cursor-hover');
+        cursorDot.classList.remove('cursor-fill');
+      });
+    });
+  } else {
+    cursorDot.style.display = 'none';
+    cursorGlow.style.display = 'none';
+  }
+
+  /* ============ MAGNETIC EFFECT ============ */
+  if(!isMobile){
+    const magnets = document.querySelectorAll('[data-magnetic]');
+    magnets.forEach(el=>{
+      const strength = el.classList.contains('nav-item') ? 0.35 : 0.25;
+      el.addEventListener('mousemove', (e)=>{
+        const rect = el.getBoundingClientRect();
+        const relX = e.clientX - (rect.left + rect.width/2);
+        const relY = e.clientY - (rect.top + rect.height/2);
+        el.style.transform = `translate(${relX*strength}px, ${relY*strength}px)`;
+      });
+      el.addEventListener('mouseleave', ()=>{
+        el.style.transform = 'translate(0,0)';
+      });
+    });
+  }
+
+  /* ============ 3D TILT CARDS ============ */
+  if(!isMobile){
+    const tiltCards = document.querySelectorAll('[data-tilt]');
+    tiltCards.forEach(card=>{
+      const inner = card.querySelector('.card-inner');
+      const depthEls = card.querySelectorAll('[data-depth]');
+
+      card.addEventListener('mousemove', (e)=>{
+        const rect = card.getBoundingClientRect();
+        const px = (e.clientX - rect.left) / rect.width;
+        const py = (e.clientY - rect.top) / rect.height;
+        const rotateY = (px - 0.5) * 18;
+        const rotateX = (0.5 - py) * 18;
+
+        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+
+        depthEls.forEach(el=>{
+          const depth = parseFloat(el.dataset.depth) || 20;
+          const moveX = (px - 0.5) * depth;
+          const moveY = (py - 0.5) * depth;
+          el.style.transform = `translateX(${moveX}px) translateY(${moveY}px) translateZ(${depth}px)`;
+        });
+      });
+
+      card.addEventListener('mouseleave', ()=>{
+        card.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+        depthEls.forEach(el=>{
+          el.style.transform = 'translateX(0) translateY(0) translateZ(0)';
+        });
+      });
+    });
+  } else {
+    document.querySelectorAll('[data-tilt]').forEach(card=>{
+      card.addEventListener('touchstart', ()=> card.classList.add('touch-active'), {passive:true});
+      card.addEventListener('touchend', ()=> card.classList.remove('touch-active'), {passive:true});
+    });
+  }
+
+  /* ============ MARQUEE (responsive speed) ============ */
+  const track = document.getElementById('marqueeTrack');
+  let pos = 0;
+  let baseSpeed = 0.6;
+  let boost = 0;
+  let lastMouseX = mouseX;
+
+  document.addEventListener('mousemove', (e)=>{
+    const delta = Math.abs(e.clientX - lastMouseX);
+    boost = Math.min(boost + delta * 0.03, 6);
+    lastMouseX = e.clientX;
+  });
+
+  function marqueeLoop(){
+    boost *= 0.94;
+    pos -= (baseSpeed + boost);
+    const trackWidth = track.scrollWidth / 2;
+    if(Math.abs(pos) >= trackWidth){ pos = 0; }
+    track.style.transform = `translateX(${pos}px)`;
+    requestAnimationFrame(marqueeLoop);
+  }
+  marqueeLoop();
+
+  /* ============ DOWNLOAD TOAST ============ */
+  const toast = document.getElementById('downloadToast');
+  const toastText = document.getElementById('downloadToastText');
+  let toastTimer = null;
+
+  document.querySelectorAll('.btn-download').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const filename = btn.dataset.filename || 'file';
+      toastText.textContent = `Mengunduh ${filename} ...`;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=> toast.classList.remove('show'), 2600);
+    });
+  });
+
+  /* ============ TAB SWITCH SYSTEM ============ */
+  const navItems = document.querySelectorAll('.nav-item');
+  const tabContents = document.querySelectorAll('.tab-content');
+
+  function activateTab(tabName){
+    navItems.forEach(n => n.classList.toggle('active', n.dataset.tab === tabName));
+
+    tabContents.forEach(tab=>{
+      const isTarget = tab.id === 'tab-' + tabName;
+      if(isTarget){
+        tab.classList.add('active');
+        // restart stagger animation
+        const staggerEls = tab.querySelectorAll('.stagger');
+        staggerEls.forEach(el=>{
+          el.style.animation = 'none';
+          void el.offsetWidth; // reflow
+          el.style.animation = '';
+        });
+      } else {
+        tab.classList.remove('active');
+      }
+    });
+  }
+
+  navItems.forEach(btn=>{
+    btn.addEventListener('click', ()=> activateTab(btn.dataset.tab));
+  });
+
+  /* ============ INITIAL LOAD ANIMATION ============ */
+  window.addEventListener('load', ()=>{
+    const activeTab = document.querySelector('.tab-content.active');
+    const staggerEls = activeTab.querySelectorAll('.stagger');
+    staggerEls.forEach(el=>{
+      el.style.animation = 'none';
+      void el.offsetWidth;
+      el.style.animation = '';
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>
